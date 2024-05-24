@@ -5,7 +5,7 @@ import ValuePool as v
 __version__ = "0.1.0"
 __license__ = "Apache2"
 
-def func2test(lel: int, lul: float):
+def func2test(lel: int, lul: float, lol: list):
     pass
 
 def main():

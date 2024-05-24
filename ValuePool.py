@@ -18,27 +18,28 @@ RunResult = tuple[Any, RunOutcome]
 
 vpools: ValuePools = {
     int: [0, 1, -1, 10, 100, 100_000_000_000_000],
-    str: ["lel", "lol", "lul"]
+    str: ["lel", "lol", "lul"],
+    float: [0.0, -1.0, 1.0, float("inf"), float("-inf")],
+    list: [[], [1,2,3], [-1,1,0], [0], [100_000, -100_000], [[0]*100]*100,
+           [""], [None], ["lel"], [r""], [[]], [{}], [set()]],
+    np.ndarray: [np.array([]), np.array([1, 2, 3]), np.array([-1, 1, 0]),
+            np.array([0]), np.array([100_000, -100_000]), np.zeros((10, 10))]
 }
-vpools[float] = [0.0, -1.0, 1.0, float("inf"), float("-inf")]
-vpools[list] = [[], vpools.get(int), vpools.get(str)]
-vpools[np.ndarray] = [
-            np.array([]),
-            np.array([1, 2, 3]),
-            np.array([-1, 1, 0]),
-            np.array([0]),
-            np.array([100_000, -100_000]),
-            np.zeros((10, 10))
-        ]
 
 class FunctionRunner(Runner):
     def __init__(self, function):
         self.function2fuzz = function
 
     def run(self, inp: list[Any]) -> RunResult:
-        self.function2fuzz(*inp)
-        # TODO(jso): capture the result correctly
-        return (inp, RunOutcome.UNRESOLVED)
+        outcome: RunOutcome = RunOutcome.UNRESOLVED
+        try:
+            self.function2fuzz(*inp)
+            outcome = RunOutcome.PASS
+        except Exception as e:
+            # TODO(jso): possibly also log the exception
+            outcome = RunOutcome.FAIL
+        finally:
+            return (inp, outcome)
 
 class ValuePoolFuzzer(Fuzzer):
     def __init__(self, vpools: ValuePools, function):
@@ -49,7 +50,6 @@ class ValuePoolFuzzer(Fuzzer):
         self.__iter_init()
 
     def fuzz(self) -> str:
-        """Get next fuzz input"""
         return next(self.iter_values)
 
     def reset(self) -> None:

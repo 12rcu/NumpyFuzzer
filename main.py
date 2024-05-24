@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
-"""
-Module Docstring
-"""
 
 import ValuePool as v
+import numpy as np
 
-__author__ = "Your Name"
 __version__ = "0.1.0"
-__license__ = "MIT"
+__license__ = "Apache2"
 
+def func2test(lel: int, lul: float):
+    pass
 
 def main():
-    fuzzer = v.ValuePoolFuzzer(int)
-    print(fuzzer.fuzz())
-    print(fuzzer.fuzz())
-    print(fuzzer.fuzz())
-
+    frunner = v.FunctionRunner(func2test)
+    fuzzer = v.ValuePoolFuzzer(v.vpools, func2test)
+    # print(fuzzer.fuzz())
+    lel = fuzzer.runs(frunner, max_trials=100)
+    print(lel)
 
 if __name__ == "__main__":
-    """ This is executed when run from the command line """
     main()

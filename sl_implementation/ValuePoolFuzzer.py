@@ -23,7 +23,7 @@ class ValuePool:
 class FullValuePool(ValuePool):
     pool = [
             True, False, None, 
-            0, 1, -1, 10, 100, 100_000_000_000_000, 0.0, 
+            0, 1, -1, 10, 100, 100_000_000_000_000, -100_000_000_000_000, 0.0, 
             -1.0, 1.0, float("inf"), float("-inf"),
             np.array([]), np.array([1, 2, 3]), np.array([-1, 1, 0]), 
             np.array([0]), np.array([100_000, -100_000]), np.zeros((10, 10))
@@ -33,7 +33,7 @@ class BoolValuePool(ValuePool):
     pool = [True, False, None]
 
 class IntValuePool(ValuePool):
-    pool = [0, 1, -1, 10, 100, 100_000_000_000_000]
+    pool = [0, 1, -1, 10, 100, 100_000_000_000_00, -100_000_000_000_000]
 
 
 class FloatValuePool(ValuePool):
@@ -68,14 +68,17 @@ class ValuePoolFuzzer(Fuzzer):
         """Return fuzz input"""
         return self.valuePool.getNextValue()
 
-    def run(self, runner: ValuePoolRunner) -> Tuple[subprocess.CompletedProcess, str]:
+    def run(self, runner: ValuePoolRunner, print_successful: bool = True) -> Tuple[subprocess.CompletedProcess, str]:
         """Run `runner` with fuzz input"""
         method = runner.method
         args = [self.fuzz() for _ in runner.arg_types]
         result = runner.run(*args)
-        print(f"Fuzzed method: {method}, Fuzzed input: {args}, Result: {result}")
+        process, outcome = result
+        if print_successful == False and process.returncode == 0:
+            return result
+        print(f"Fuzzed method: {method}, Result: {result}")
         return result
 
-    def runs(self, runner: ValuePoolRunner, trials: int = 10) -> List[Tuple[subprocess.CompletedProcess, str]]:
+    def runs(self, runner: ValuePoolRunner, trials: int = 10, print_successful: bool = True) -> List[Tuple[subprocess.CompletedProcess, str]]:
         """Run `runner` with fuzz input, `trials` times"""
-        return [self.run(runner) for _ in range(trials)]
+        return [self.run(runner, print_successful) for _ in range(trials)]

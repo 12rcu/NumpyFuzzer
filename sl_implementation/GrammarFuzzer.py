@@ -7,12 +7,12 @@ import ast
 import GrammarRunner
 
 
-NUMPY_GRAMMAR: Grammar = {
+UFUNC_GRAMMAR: Grammar = {
     "<start>":
         ["<function>"],
 
     "<function>":
-        ["np.exp(<arg>)", "np.add(<arg>, <arg>)", "np.multiply(<arg>, <arg>)"],
+        ["np.add(<arg>, <arg>)", "np.subtract(<arg>, <arg>)", "np.multiply(<arg>, <arg>)", "np.divide(<arg>, <arg>)", "np.matmul(<array>, <array>)", "np.exp(<arg>)"],
 
     "<arg>":
         ["<int>", "<float>", "<array>"],
@@ -44,14 +44,17 @@ class GrammarFuzzer():
         """Return fuzz input"""
         return self.generate()
 
-    def run(self, runner: GrammarRunner) -> Tuple[subprocess.CompletedProcess, str]:
+    def run(self, runner: GrammarRunner, print_successful: bool = True) -> Tuple[subprocess.CompletedProcess, str]:
         """Run `runner` with fuzz input"""
         fuzz_input = self.fuzz()
         result = runner.run(fuzz_input)
-        print(f"Fuzzed input: {fuzz_input}, Result: {result}")
+        process, outcome = result
+        if print_successful == False and process.returncode == 0:
+            return result
+        print(f"Result: {result}")
         return result
 
 
-    def runs(self, runner: GrammarRunner, trials: int = 10) -> List[Tuple[subprocess.CompletedProcess, str]]:
+    def runs(self, runner: GrammarRunner, trials: int = 10, print_successful: bool = True) -> List[Tuple[subprocess.CompletedProcess, str]]:
         """Run `runner` with fuzz input, `trials` times"""
-        return [self.run(runner) for _ in range(trials)]
+        return [self.run(runner, print_successful) for _ in range(trials)]

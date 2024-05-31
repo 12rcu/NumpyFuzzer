@@ -16,25 +16,34 @@ numpy_functions = [
 ]
 
 functions2 = {
-    np.sum: [int, int]
-
+    np.sum: [[int, int], lambda x, y: x + y],
+    np.prod: [[int, int], lambda x, y: x * y],
+    np.min: [[int, int], lambda x, y: x if x < y else y],
+    np.max: [[int, int], lambda x, y: x if x > y else y]
 }
 
 
 def generate():
-    for (func, types) in functions2.items():
+    for (func, additionals) in functions2.items():
+        types = additionals[0]
+        implementation = additionals[1]
         pools = []
 
         for type in types:
             pools.append(v.ValuePoolFuzzer(type))
 
-        for i in range(6):
+        for i in range(600):
             arguments = []
             for pool in pools:
                 arguments.append(pool.fuzz())
 
             result = func(arguments)
-            print(result)
+            result_assertion = implementation(*arguments)
+
+            if result != result_assertion:
+                print("AssertionError: " + np.array2string(result) + "!=" + str(result_assertion))
+            else:
+                print(result)
 
 
 def main():

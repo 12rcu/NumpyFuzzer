@@ -28,12 +28,13 @@ def generate():
         for type in types:
             pools.append(v.ValuePoolFuzzer(type))
 
-        arguments = []
-        for pool in pools:
-            arguments.append(pool.fuzz())
+        for i in range(6):
+            arguments = []
+            for pool in pools:
+                arguments.append(pool.fuzz())
 
-        result = func(*arguments)
-        print(result)
+            result = func(arguments)
+            print(result)
 
 
 def main():

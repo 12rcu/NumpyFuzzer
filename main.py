@@ -5,10 +5,7 @@ Module Docstring
 import numpy as np
 
 import ValuePool as v
-
-__author__ = "Your Name"
-__version__ = "0.1.0"
-__license__ = "MIT"
+import IpGrammar
 
 numpy_functions = [
     np.sum, np.prod, np.mean, np.std, np.var,
@@ -38,6 +35,10 @@ def generate():
 
 def main():
     generate()
+    print("Is valid grammar: ")
+    print(IpGrammar.ipGrammar())
+    print("Random ip: ")
+    print(IpGrammar.generateIp())
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from fuzzingbook.Fuzzer import *
 import subprocess
 import numpy as np
-
+from random import randrange
 
 class ValuePool:
     pool = []
@@ -15,7 +15,7 @@ class ValuePool:
         ret = self.pool[self.index]
         self.index = self.index + 1
         if len(self.pool) == self.index:
-            self.index = 0
+            self.index = randrange(len(self.pool))
         return ret
 
 

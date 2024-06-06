@@ -5,7 +5,7 @@ from threading import Event
 
 class BasicGenerator:
     type_dir: {
-        type: [Any]
+        type: set
     } = {}
 
     def __init__(self):
@@ -20,7 +20,7 @@ class BasicGenerator:
         if self.type_dir.__contains__(t):
             self.type_dir[t].append(entry)
         else:
-            self.type_dir[t] = [entry]
+            self.type_dir[t] = {entry}
 
     def generate(self, func: FunctionHeader, interrupt: Event):
         """

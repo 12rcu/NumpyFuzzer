@@ -3,6 +3,7 @@ import subprocess
 import numpy as np
 from random import randrange
 
+
 class ValuePool:
     pool = []
     index = 0
@@ -20,7 +21,7 @@ class ValuePool:
 
 
 class IntValuePool(ValuePool):
-    pool = [0, 1, -1, 10, 100, 100_000_000_000_000]
+    pool = [0, 1, -1, 10, 100, 100_000_000_000_000, 16, 32, 512, -10, -100, -17, -33]
 
 
 class FloatValuePool(ValuePool):
@@ -40,9 +41,12 @@ class ArrayValuePool(ValuePool):
 
 class ValuePoolFuzzer(Fuzzer):
 
-    def __init__(self, t: type) -> None:
+    def __init__(self, t: type, values: Any = None) -> None:
         super().__init__()
-        if t == int:
+        if values is not None:
+            self.valuePool = ValuePool()
+            self.valuePool.pool = values
+        elif t == int:
             self.valuePool = IntValuePool()
         elif t == float:
             self.valuePool = FloatValuePool()
@@ -62,3 +66,38 @@ class ValuePoolFuzzer(Fuzzer):
             -> List[Tuple[subprocess.CompletedProcess, Outcome]]:
         """Run `runner` with fuzz input, `trials` times"""
         return [self.run(runner) for i in range(trials)]
+
+
+class ValuePoolArgWrapper(Fuzzer):
+    pools: [ValuePoolFuzzer] = []
+    currentParams: [] = []
+    index = 0
+
+    def __init__(self, args: [type]):
+        super().__init__()
+        for argType in args:
+            pool = ValuePoolFuzzer(argType)
+            self.pools.append(pool)
+            self.currentParams.append(pool.fuzz())
+
+        assert len(self.pools) == len(self.currentParams)
+
+    def execFuzz(self) -> bool:
+        """bump index"""
+        self.index = self.index + 1
+
+        tmp_index = 1
+        for accessIndex in range(len(self.pools)):
+            if self.index % tmp_index:
+                self.currentParams[accessIndex] = self.pools[accessIndex].fuzz()
+            tmp_index += len(self.pools[accessIndex].valuePool.pool)
+
+        if tmp_index < self.index:
+            return False  # all parameters were exhaustively fuzzed
+        else:
+            return True
+
+    def fuzz(self):
+        self.execFuzz()
+        """Returns an array of with types specified in the constructor """
+        return self.currentParams

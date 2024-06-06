@@ -1,4 +1,3 @@
-from fuzzingbook.Grammars import *
 from fuzzingbook.GrammarFuzzer import *
 
 IP_GRAMMAR: Grammar = {

@@ -28,9 +28,9 @@ class BasicGenerator:
         :param func: the np function that takes only primary types as input to generate more complex input
         :param interrupt: an interrupt event that stops the generation
         """
-        wrapper = ValuePoolArgWrapper(func.parameterArr)
+        wrapper = ValuePoolArgWrapper(func.parameter_arr)
         while wrapper.execFuzz() or not interrupt.is_set():
-            func_result = func.func(wrapper.currentParams, *func.static_parameters)
+            func_result = func.func(wrapper.current_params, *func.static_parameters)
             self.add_result(func.returns, func_result)
 
     def generate_pool(self, t: type) -> ValuePoolFuzzer:

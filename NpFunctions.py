@@ -5,13 +5,13 @@ import numpy as np
 
 class FunctionHeader:
     func: Any
-    parameterArr: [type]
+    parameter_arr: [type]
     static_parameters: [Any]
     returns: type
 
     def __init__(self, func, params: [type], static_parameters: [Any], returns: type) -> None:
         self.func = func
-        self.parameterArr = params
+        self.parameter_arr = params
         self.static_parameters = static_parameters
         self.returns = returns
 

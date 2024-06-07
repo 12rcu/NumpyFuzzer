@@ -70,7 +70,7 @@ class ValuePoolFuzzer(Fuzzer):
 
 class ValuePoolArgWrapper(Fuzzer):
     pools: [ValuePoolFuzzer] = []
-    currentParams: [] = []
+    current_params: [] = []
     index = 0
 
     def __init__(self, args: [type]):
@@ -78,9 +78,9 @@ class ValuePoolArgWrapper(Fuzzer):
         for argType in args:
             pool = ValuePoolFuzzer(argType)
             self.pools.append(pool)
-            self.currentParams.append(pool.fuzz())
+            self.current_params.append(pool.fuzz())
 
-        assert len(self.pools) == len(self.currentParams)
+        assert len(self.pools) == len(self.current_params)
 
     def execFuzz(self) -> bool:
         """bump index"""
@@ -89,7 +89,7 @@ class ValuePoolArgWrapper(Fuzzer):
         tmp_index = 1
         for accessIndex in range(len(self.pools)):
             if self.index % tmp_index:
-                self.currentParams[accessIndex] = self.pools[accessIndex].fuzz()
+                self.current_params[accessIndex] = self.pools[accessIndex].fuzz()
             tmp_index += len(self.pools[accessIndex].valuePool.pool)
 
         if tmp_index < self.index:
@@ -100,4 +100,4 @@ class ValuePoolArgWrapper(Fuzzer):
     def fuzz(self):
         self.execFuzz()
         """Returns an array of with types specified in the constructor """
-        return self.currentParams
+        return self.current_params

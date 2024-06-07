@@ -18,7 +18,7 @@ class BasicGenerator:
         :param entry: the entry to insert
         """
         if self.type_dir.__contains__(t):
-            self.type_dir[t].append(entry)
+            self.type_dir[t].add(entry)
         else:
             self.type_dir[t] = {entry}
 

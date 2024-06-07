@@ -17,7 +17,7 @@ class BasicGenerator:
         :param t: the type to add the entry to
         :param entry: the entry to insert
         """
-        if self.type_dir.__contains__(t):
+        if t in self.type_dir:
             self.type_dir[t].add(entry)
         else:
             self.type_dir[t] = {entry}
@@ -28,11 +28,9 @@ class BasicGenerator:
         :param func: the np function that takes only primary types as input to generate more complex input
         :param interrupt: an interrupt event that stops the generation
         """
-        wrapper = ValuePoolArgWrapper(func.params)
+        wrapper = ValuePoolArgWrapper(func.parameterArr)
         while wrapper.execFuzz() or not interrupt.is_set():
-            func_result = func.func(wrapper.currentParams)  # todo refactor this call as
-            # numpy takes an actual array instead of passing them in like
-            # generator.generate(func, *interrupt)
+            func_result = func.func(wrapper.currentParams, *func.static_parameters)
             self.add_result(func.returns, func_result)
 
     def generate_pool(self, t: type) -> ValuePoolFuzzer:
@@ -41,5 +39,5 @@ class BasicGenerator:
         :param t: the type the ValuePool has
         :return: the ValuePool fuzzer
         """
-        assert self.type_dir.__contains__(t)
+        assert t in self.type_dir
         return ValuePoolFuzzer(t, self.type_dir[t])

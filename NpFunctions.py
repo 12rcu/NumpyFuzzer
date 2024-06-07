@@ -5,12 +5,14 @@ import numpy as np
 
 class FunctionHeader:
     func: Any
-    params: [type]
+    parameterArr: [type]
+    static_parameters: [Any]
     returns: type
 
-    def __init__(self, func, params: [type], returns: type) -> None:
+    def __init__(self, func, params: [type], static_parameters: [Any], returns: type) -> None:
         self.func = func
-        self.params = params
+        self.parameterArr = params
+        self.static_parameters = static_parameters
         self.returns = returns
 
 
@@ -27,11 +29,11 @@ assertFunctions = {
 }
 
 functionHeaders = [
-    FunctionHeader(np.sum, [int, int], np.int64),
-    FunctionHeader(np.prod, [int, int], int),
-    FunctionHeader(np.mean,[int, int], float),
-    FunctionHeader(np.std, [int, int], int),
-    FunctionHeader(np.var, [int, int], int),
-    FunctionHeader(np.min, [int, int], int),
-    FunctionHeader(np.max, [int, int], int),
+    FunctionHeader(np.sum, params=[int, int], static_parameters=[None, np.int64], returns=np.int64),
+    FunctionHeader(np.prod, params=[int, int], static_parameters=[None, np.int64], returns=np.int64),
+    FunctionHeader(np.mean, params=[int, int], static_parameters=[None, np.float64], returns=np.float64),
+    FunctionHeader(np.std, params=[int, int], static_parameters=[None, np.float64], returns=np.float64),
+    FunctionHeader(np.var, params=[int, int], static_parameters=[None, np.float64], returns=np.float64),
+    FunctionHeader(np.min, params=[int, int], static_parameters=[None, None], returns=np.int64),
+    FunctionHeader(np.max, params=[int, int], static_parameters=[None, None], returns=np.int64),
 ]

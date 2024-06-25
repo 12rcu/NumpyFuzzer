@@ -1,3 +1,4 @@
+import numpy
 from fuzzingbook.Fuzzer import *
 import subprocess
 import numpy as np
@@ -25,7 +26,7 @@ class IntValuePool(ValuePool):
 
 
 class FloatValuePool(ValuePool):
-    pool = [0.0, -1.0, 1.0, float("inf"), float("-inf")]
+    pool = [0.0, -1.0, 1.0, float("inf"), float("-inf"), numpy.inf, numpy.euler_gamma, numpy.pi, numpy.e]
 
 
 class ArrayValuePool(ValuePool):

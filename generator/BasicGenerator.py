@@ -30,6 +30,7 @@ class BasicGenerator:
         """
         wrapper = ValuePoolArgWrapper(func.parameter_arr)
         while wrapper.execFuzz() or not interrupt.is_set():
+            # print("Current params {}".format(wrapper.current_params))
             func_result = func.func(wrapper.current_params, *func.static_parameters)
             self.add_result(func.returns, func_result)
 

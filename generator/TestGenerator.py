@@ -14,7 +14,7 @@ def testGenerator():
     t = Thread(target=generateValues, args=(generator, interrupt))
     t.start()
 
-    time.sleep(10)
+    time.sleep(20)
 
     interrupt.set()
     t.join()

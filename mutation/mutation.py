@@ -17,17 +17,16 @@ def run():
 
     for i in range(1000000000000):
         input_string = mutation_fuzzer.fuzz()
-        bytes = input_string.encode()
 
         reference_check = input_string.isdigit()
         result, outcome = runner.run(input_string)
         if reference_check != (True if outcome == "PASS" else False):
-            print(str(i) + ": " + str(input_string) + ": " + str(outcome) + ". Reference says: " + str(reference_check))
-            print("Bytes: " + str(bytes))
+            print(str(i) + ": " + str(input_string) + ": " + str(outcome) + ". Reference says: " + str(reference_check) + ". Bytes: " + str(input_string.encode()))
+
 
 
 def is_digit_test(input_string):
-    if strings.isdigit(input_string):
+    if np.all(strings.isdigit(input_string)):
         return True
     else:
         raise Exception()

@@ -18,12 +18,12 @@ UFUNC_GRAMMAR: Grammar = {
         ["<int>", "<float>", "<array>"],
 
     "<int>":
-        [str(i) for i in range(0, 100)],
+        [str(i) for i in range(-100, 100)],
 
     "<float>":
-        [str(round(random.uniform(0.0, 100.0), 2)) for _ in range(100)],
+        [str(round(random.uniform(-100.0, 100.0), 2)) for _ in range(100)],
     "<array>":
-        ["np.array([" + ", ".join([str(random.uniform(0.0, 100.0)) for _ in range(random.randint(1, 10))]) + "])" for _ in range(100)],
+        ["np.array([" + ", ".join([str(random.uniform(-100.0, 100.0)) for _ in range(random.randint(1, 10))]) + "])" for _ in range(100)],
 }
 
 class GrammarFuzzer():

@@ -3,20 +3,23 @@
 Module Docstring
 """
 
-import ValuePool as v
-
-__author__ = "Your Name"
-__version__ = "0.1.0"
-__license__ = "MIT"
+from grammar import IpGrammar
+from valuepool import TestValuePool
+from generator import TestGenerator
+import numpy as np
 
 
 def main():
-    fuzzer = v.ValuePoolFuzzer(int)
-    print(fuzzer.fuzz())
-    print(fuzzer.fuzz())
-    print(fuzzer.fuzz())
+    np.sum([100000000000000, 1])
+    np.sum([float("-inf"), float("inf")])
+    #np.sum([0, -100, -np.inf, np.inf, -33, 1, 1.0, 3.141592653589793, 32, -33, -33, -100])
+    TestValuePool.generate()
+    print("Is valid grammar: ")
+    print(IpGrammar.ipGrammar())
+    print("Random ip: ")
+    print(IpGrammar.generateIp())
+    TestGenerator.testGenerator()
 
 
 if __name__ == "__main__":
-    """ This is executed when run from the command line """
     main()

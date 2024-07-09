@@ -30,11 +30,6 @@ def main():
     g_fuzzer = g.GrammarFuzzer(g.UFUNC_GRAMMAR)
     g_fuzzer.runs(g_runner, trials=TRIALS*2, print_successful=False)
 
-    print("---------------Datetime GrammarFuzzer:----------------")
-    runner = gr.GrammarRunner()
-    fuzzer = g.GrammarFuzzer(g.DATETIME_GRAMMAR)
-    fuzzer.runs(runner, trials=TRIALS * 2, print_successful=True)
-
     '''
     print("---------------Fuzzing Book GrammarFuzzer:----------------")
     fpg_fuzzer = GrammarFuzzer(g.UFUNC_GRAMMAR)

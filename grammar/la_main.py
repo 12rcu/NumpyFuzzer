@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-import numpy as np
-
-import GrammarFuzzer as gf
-import GrammarRunner as gr
+import sl_implementation.GrammarFuzzer as gf
+import sl_implementation.GrammarRunner as gr
 
 import DatetimeGrammar
 

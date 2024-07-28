@@ -1,11 +1,9 @@
-from fuzzingbook.Fuzzer import *
-from fuzzingbook.Grammars import * 
+from fuzzingbook.Grammars import *
 import subprocess
-import numpy as np
-import ast
 
 import GrammarRunner
 
+import time
 
 UFUNC_GRAMMAR: Grammar = {
     "<start>":
@@ -58,3 +56,11 @@ class GrammarFuzzer():
     def runs(self, runner: GrammarRunner, trials: int = 10, print_successful: bool = True) -> List[Tuple[subprocess.CompletedProcess, str]]:
         """Run `runner` with fuzz input, `trials` times"""
         return [self.run(runner, print_successful) for _ in range(trials)]
+
+    def runs(self, runner: GrammarRunner, timeout_in_sec: int = 60, print_successful: bool = True) -> List[Tuple[subprocess.CompletedProcess, str]]:
+        """Run `runner` with fuzz input, `timeout_in_sec` seconds long"""
+        results = []
+        end_time = time.time() + timeout_in_sec
+        while time.time() < end_time:
+            results += self.run(runner, print_successful)
+        return results
